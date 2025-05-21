@@ -1,0 +1,7 @@
+{
+  "name": "MusicApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
