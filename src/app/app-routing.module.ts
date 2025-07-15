@@ -11,6 +11,14 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'playlist',
+    loadChildren: () => import('./playlist/playlist.module').then( m => m.PlaylistPageModule)
+  },
+  {
+    path: 'jamendo',
+    loadChildren: () => import('./jamendo/jamendo.module').then(m => m.JamendoPageModule)
+  },
 ];
 
 @NgModule({

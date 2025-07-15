@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { initialize } from '@ionic/core';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +9,11 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    this.initializeApp();
+  }
+
+  async initializeApp() {
+    await SplashScreen.hide({ fadeOutDuration: 500 });
+  }
 }

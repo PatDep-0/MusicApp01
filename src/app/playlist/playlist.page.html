@@ -1,0 +1,100 @@
+<ion-content class="ion-padding">
+
+  <div *ngIf="selectedPlaylist" class="player-container">
+    <img [src]="currentTrack?.album_image || currentTrack?.image || 'assets/icon/icon.jpg'"  alt="Album Art">
+    <h3>{{ currentTrack?.name }}</h3>
+    <audio #audioPlayer
+           [src]="currentTrack?.audio"
+           (loadedmetadata)="onLoadedMetadata()"
+           (timeupdate)="onTimeUpdate()"
+           (ended)="onEnded()"
+           controls
+           style="display: none;">
+    </audio>
+    <div class="controls">
+      <ion-button (click)="prevTrack()" [disabled]="tracks.length < 2">⏮️</ion-button>
+      <ion-button (click)="togglePlay()">
+        {{ isPlaying ? '⏸️ Pause' : '▶️ Play' }}
+      </ion-button>
+      <ion-button (click)="nextTrack()" [disabled]="tracks.length < 2">⏭️</ion-button>
+      <ion-button (click)="toggleLoopPlaylist()">
+        <ng-container [ngSwitch]="loopMode">
+          <span *ngSwitchCase="1">🔂 Looping</span>
+          <span *ngSwitchCase="2">🔁 Looping Playlist</span>
+          <span *ngSwitchDefault>🔁 Loop Off</span>
+        </ng-container>
+      </ion-button>
+    </div>
+    <div class="seekbar">
+      <span>{{ formatTime(currentTime) }}</span>
+      <input type="range"
+             min="0"
+             [max]="duration"
+             [value]="currentTime"
+             (input)="seekTo($event)">
+      <span>{{ formatTime(duration) }}</span>
+    </div>
+    <ion-button expand="block" (click)="selectedPlaylist = null; selectedPlaylistSource = null;">Back to Playlists</ion-button>
+    <ion-button
+      *ngIf="selectedPlaylistSource === 'local'"
+      expand="block"
+      (click)="fileInput.click()"
+    >
+      Add Track
+    </ion-button>
+    <input
+      #fileInput
+      type="file"
+      accept="audio/*" multiple
+      style="display:none"
+      (change)="onLocalFileSelected($event)"
+    >
+    <ion-list *ngIf="selectedPlaylist">
+      <ion-item *ngFor="let track of tracks; let i = index"
+                (click)="playTrack(i)"
+                [class.selected-track]="i === currentTrackIndex">
+        <ion-label>
+          <h3>{{ track.name }}</h3>
+          <p>{{ track.artist_name || track.artist }}</p>
+        </ion-label>
+        <ion-icon *ngIf="i === currentTrackIndex" name="musical-notes" slot="end"></ion-icon>
+        <ion-button *ngIf="selectedPlaylistSource === 'local'" fill="clear" color="danger" slot="end" (click)="deleteTrackFromPlaylist(i, $event)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div style="border: 2px solid #f36021; border-radius: 8px; margin-bottom: 16px; padding: 8px;">
+    <h2>Local Playlists</h2>
+    <ion-button expand="block" (click)="addLocalPlaylist()">Add Local Playlist</ion-button>
+    <ion-list *ngIf="!selectedPlaylist || selectedPlaylistSource !== 'local'">
+      <ion-item *ngFor="let playlist of localPlaylists">
+        <ion-thumbnail slot="start">
+          <img [src]="playlist.image || 'assets/icon/icon.jpg'" alt="Playlist Art">
+        </ion-thumbnail>
+        <ion-label (click)="selectPlaylist(playlist, 'local')">
+          <h3>{{ playlist.name }}</h3>
+        </ion-label>
+        <ion-button fill="clear" color="danger" slot="end" (click)="deleteLocalPlaylist(playlist, $event)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div style="border: 2px solid #f36021; border-radius: 8px; margin-bottom: 16px; padding: 8px;">
+    <h2>Jamendo Playlists</h2>
+    <ion-list *ngIf="!selectedPlaylist || selectedPlaylistSource !== 'jamendo'">
+      <ion-item *ngFor="let playlist of jamendoPlaylists">
+        <ion-thumbnail slot="start">
+          <img [src]="playlist.image || 'assets/icon/icon.jpg'" alt="Playlist Art">
+        </ion-thumbnail>
+        <ion-label (click)="selectPlaylist(playlist, 'jamendo')">
+          <h3>{{ playlist.name }}</h3>
+          <p>{{ playlist.creationdate | date }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

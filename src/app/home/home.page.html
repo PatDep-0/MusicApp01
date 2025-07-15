@@ -1,20 +1,64 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" routerLink="/jamendo">
+          Jamendo
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" (click)="fileInput.click()">
+          Add Music
+        </ion-button>
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept="audio/*" multiple hidden>
+      </ion-col>
+    </ion-row>
+  </ion-list>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div *ngIf="currentSong" class="player-container">
+    <img src="assets/icon/icon.jpg" alt="Album Art" style="width:100%;max-width:300px;display:block;margin:auto 0 16px 0;border-radius:8px;">
+    <h2>{{ currentSong.name }}</h2>
+    <audio #audioPlayer
+           [src]="currentSongUrl"
+           (loadedmetadata)="onLoadedMetadata()"
+           (timeupdate)="onTimeUpdate()"
+           (ended)="onEnded()"
+           [loop]="isLooping"
+           controls
+           hidden>
+    </audio>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="controls">
+      <ion-button (click)="prevSong()" [disabled]="songs.length < 2">⏮️</ion-button>
+      <ion-button (click)="togglePlay()">
+        {{ isPlaying ? '⏸️ Pause' : '▶️ Play' }}
+      </ion-button>
+      <ion-button (click)="nextSong()" [disabled]="songs.length < 2">⏭️</ion-button>
+      <ion-button (click)="toggleLoop()">
+        {{ isLooping ? '🔁 Looping' : '🔁 Loop Off' }}
+      </ion-button>
+    </div>
+
+    <div class="seekbar">
+      <span>{{ formatTime(currentTime) }}</span>
+      <input type="range"
+             min="0"
+             [max]="duration"
+             [value]="currentTime"
+             (input)="seekTo($event)">
+      <span>{{ formatTime(duration) }}</span>
+    </div>
   </div>
+
+  <ion-list>
+    <ion-item *ngFor="let song of songs; let i = index" 
+              (click)="playSong(i)" 
+              [class.selected-song]="i === currentSongIndex">
+      <ion-label>{{ song.name }}</ion-label>
+      <ion-icon *ngIf="i === currentSongIndex" name="musical-notes" slot="end"></ion-icon>
+      <ion-button fill="clear" color="danger" slot="end" (click)="deleteSong(i); $event.stopPropagation()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -1,0 +1,101 @@
+ion-content {
+  --background: linear-gradient(135deg, #2d2626 0%, #3a2d2d 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.player-container {
+  background: rgba(33, 30, 30, 0.94);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  padding: 24px 18px;
+  margin: 32px auto 24px auto;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-button {
+  --background: linear-gradient(90deg, #ff6a00 0%, #ee0979 100%);
+  --color: #fff;
+  --box-shadow: 0 2px 8px 0 rgba(238,9,121,0.15);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  transition: filter 0.2s;
+}
+
+img {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px 0 8px 0;
+}
+
+ion-list {
+  background: transparent;
+  box-shadow: none;
+}
+
+ion-item {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+ion-label {
+  color: #fff;
+}
+
+h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+ion-range {
+  width: 100%;
+  max-width: 340px;
+  margin: 12px 0 18px 0;
+  --bar-background: #fff2;
+  --bar-background-active: linear-gradient(90deg, #ff6a00 0%, #ee0979 100%);
+  --knob-background: #ff6a00;
+  --knob-size: 18px;
+  --pin-background: #ee0979;
+  --pin-color: #fff;
+}
+
+ion-range {
+  --height: 8px;
+  --bar-border-radius: 8px;
+  --bar-height: 8px;
+  --knob-box-shadow: 0 2px 8px 0 rgba(238,9,121,0.15);
+}
+
+ion-range .range-knob {
+  border: 2px solid #fff;
+}
+
+ion-range .range-bar {
+  opacity: 0.85;
+}
+
+ion-label[slot="start"],
+ion-label[slot="end"] {
+  color: #fff;
+  font-size: 0.95em;
+  min-width: 38px;
+  text-align: center;
+}
+

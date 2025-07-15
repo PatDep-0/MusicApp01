@@ -1,0 +1,67 @@
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" routerLink="/home">
+          Local
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" routerLink="/playlist">
+          Playlists
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-list>
+  
+  <ion-item>
+    <ion-input [(ngModel)]="searchQuery" placeholder="Search for music"></ion-input>
+    <ion-button (click)="onSearch()">Search</ion-button>
+  </ion-item>
+
+  
+  <div *ngIf="currentTrack" class="player-container">
+    <img 
+      *ngIf="currentTrack?.album_image" 
+      [src]="currentTrack.album_image" 
+      alt="Album Cover" 
+      style="width: 180px; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 16px;" 
+    />
+    <h3>{{ currentTrack?.name }} - {{ currentTrack?.artist_name }}</h3>
+    <audio #audioPlayer 
+           (timeupdate)="onTimeUpdate()" 
+           (loadedmetadata)="onLoadedMetadata()"
+           (ended)="onEnded()"
+           [src]="currentTrack?.audio" 
+           >
+    </audio>
+    <ion-range [value]="currentTime" [max]="duration" (ionChange)="seek($event)">
+      <ion-label slot="start">{{ formatTime(currentTime) }}</ion-label>
+      <ion-label slot="end">{{ formatTime(duration) }}</ion-label>
+    </ion-range>
+    <ion-buttons>
+      <ion-button (click)="previousTrack()">⏮️</ion-button>
+      <ion-button (click)="togglePlayPause()">
+        {{ isPlaying ? '⏸️ Pause' : '▶️ Play' }}
+      </ion-button>
+      <ion-button (click)="nextTrack()">⏭️</ion-button>
+      <ion-button (click)="toggleLoop()">
+        <ng-container [ngSwitch]="loopMode">
+          <span *ngSwitchCase="1">🔂 Looping</span>
+          <span *ngSwitchCase="2">🔁 Looping Tracklist</span>
+          <span *ngSwitchDefault>🔁 Loop Off</span>
+        </ng-container>
+      </ion-button>
+    </ion-buttons>
+    <ion-button expand="block" (click)="closePlayer()">Close</ion-button>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let track of tracks; let i = index" (click)="openPlayer(i)">
+      <ion-label>
+        <h2>{{ track.name }}</h2>
+        <p>{{ track.artist_name }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
